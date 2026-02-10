@@ -553,6 +553,154 @@
                 white-space: pre-wrap;
                 line-height: 1.6;
             }
+
+            /* Technical Health Grid */
+            .tech-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-top: 1rem;
+            }
+
+            @media (min-width: 640px) {
+                .tech-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            .tech-item {
+                background-color: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 0.5rem;
+                padding: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            .tech-icon {
+                font-size: 1.5rem;
+                flex-shrink: 0;
+            }
+
+            .tech-info {
+                flex: 1;
+            }
+
+            .tech-title {
+                font-weight: 700;
+                color: #334155;
+                font-size: 0.95rem;
+                margin-bottom: 0.1rem;
+            }
+
+            .tech-desc {
+                font-size: 0.8rem;
+                color: #64748b;
+                line-height: 1.3;
+            }
+
+            /* Hardcoded Utilities for Tech Grid */
+            .grid {
+                display: grid;
+            }
+
+            .grid-cols-1 {
+                grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
+
+            @media (min-width: 768px) {
+                .md\:grid-cols-2 {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+            }
+
+            .gap-3 {
+                gap: 0.75rem;
+            }
+
+            .mt-4 {
+                margin-top: 1rem;
+            }
+
+            .flex {
+                display: flex;
+            }
+
+            .flex-row {
+                flex-direction: row;
+            }
+
+            .flex-col {
+                flex-direction: column;
+            }
+
+            .items-center {
+                align-items: center;
+            }
+
+            .p-3 {
+                padding: 0.75rem;
+            }
+
+            .bg-gray-50 {
+                background-color: #f9fafb;
+            }
+
+            .border {
+                border-width: 1px;
+            }
+
+            .border-gray-200 {
+                border-color: #e5e7eb;
+            }
+
+            .rounded-lg {
+                border-radius: 0.5rem;
+            }
+
+            .shadow-sm {
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            }
+
+            .flex-shrink-0 {
+                flex-shrink: 0;
+            }
+
+            .mr-3 {
+                margin-right: 0.75rem;
+            }
+
+            .text-2xl {
+                font-size: 1.5rem;
+                line-height: 2rem;
+            }
+
+            .font-bold {
+                font-weight: 700;
+            }
+
+            .text-sm {
+                font-size: 0.875rem;
+                line-height: 1.25rem;
+            }
+
+            .text-gray-700 {
+                color: #374151;
+            }
+
+            .uppercase {
+                text-transform: uppercase;
+            }
+
+            .text-xs {
+                font-size: 0.75rem;
+                line-height: 1rem;
+            }
+
+            .text-gray-500 {
+                color: #6b7280;
+            }
     </style>
 </head>
 
@@ -1086,6 +1234,7 @@ Write a valid JSON-LD "FAQPage" Schema markup for this page.
                 copyText: `JS Files: ${scriptCount}\nCSS Files: ${cssCount}`
             });
 
+
             // 11. Technical & Indexing (Critical Checks)
             const canonical = doc.querySelector('link[rel="canonical"]')?.href || "";
             const robots = doc.querySelector('meta[name="robots"]')?.content || "";
@@ -1093,51 +1242,91 @@ Write a valid JSON-LD "FAQPage" Schema markup for this page.
             const favicon = doc.querySelector('link[rel="icon"], link[rel="shortcut icon"]')?.href || "";
 
             let techScore = 0;
-            let techIssues = [];
             let isCritical = false; // For Auto-Open
 
-            // Canonical
-            if (canonical) {
-                techScore += 4;
-            } else {
-                techIssues.push("⚠️ ไม่พบ Canonical Tag");
-            }
+            // 1. Canonical
+            const canonicalPass = !!canonical;
+            if (canonicalPass) techScore += 4;
+            const canonicalIcon = canonicalPass ? '✅' : '⚠️';
+            const canonicalMsg = canonicalPass ? 'ต้นฉบับถูกต้อง' : 'เสี่ยงเนื้อหาซ้ำ';
 
-            // Robots
-            if (robots.includes("noindex")) {
-                techIssues.push("🔴 Critical: พบ 'noindex' (Google ไม่เก็บข้อมูล)");
+            // 2. Robots
+            const robotsFail = robots.includes("noindex");
+            if (robotsFail) {
                 isCritical = true;
-                techScore = 0; // Fail immediately
+                techScore = 0;
             } else {
                 techScore += 3;
             }
+            const robotsPass = !robotsFail;
+            const robotsIcon = robotsPass ? '✅' : '🔴';
+            const robotsMsg = robotsPass ? 'พร้อมแสดงบน Google' : 'ถูกปิดกั้น (Noindex)';
 
-            // Viewport
-            if (viewport) {
+
+            // 3. Viewport
+            const viewportPass = !!viewport;
+            if (viewportPass) {
                 techScore += 2;
             } else {
-                techIssues.push("🔴 Critical: ไม่พบ Viewport Tag (Mobile ตาย)");
                 isCritical = true;
             }
+            const viewportIcon = viewportPass ? '✅' : '🔴';
+            const viewportMsg = viewportPass ? 'รองรับมือถือ 100%' : 'ไม่รองรับมือถือ';
 
-            // Favicon
-            if (favicon) {
-                techScore += 1;
-            } else {
-                techIssues.push("🟠 ไม่พบ Favicon");
-            }
 
-            let techAdvice = "✅ การตั้งค่าทางเทคนิคถูกต้อง (Index ได้, รองรับมือถือ)";
+            // 4. Favicon
+            const faviconPass = !!favicon;
+            if (faviconPass) techScore += 1;
+            const faviconIcon = faviconPass ? '✅' : '🟠';
+            const faviconMsg = faviconPass ? 'ดูน่าเชื่อถือ' : 'ขาดโลโก้';
+
+            // FORCE INLINE STYLES (As Requested)
+            let techGridHtml = `
+            <div style="width: 100%; display: grid !important; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important; gap: 10px !important; white-space: normal !important; font-family: sans-serif !important;">
+                
+                <div style="display: flex !important; flex-direction: row !important; align-items: center !important; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee;">
+                    <div style="font-size: 24px; margin-right: 12px;">${canonicalIcon}</div>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="font-weight: bold; font-size: 14px; color: #333; text-transform: uppercase;">Canonical</div>
+                        <div style="font-size: 12px; color: #666;">${canonicalMsg}</div>
+                    </div>
+                </div>
+
+                <div style="display: flex !important; flex-direction: row !important; align-items: center !important; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee;">
+                    <div style="font-size: 24px; margin-right: 12px;">${robotsIcon}</div>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="font-weight: bold; font-size: 14px; color: #333; text-transform: uppercase;">Robots Status</div>
+                        <div style="font-size: 12px; color: #666;">${robotsMsg}</div>
+                    </div>
+                </div>
+
+                <div style="display: flex !important; flex-direction: row !important; align-items: center !important; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee;">
+                    <div style="font-size: 24px; margin-right: 12px;">${viewportIcon}</div>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="font-weight: bold; font-size: 14px; color: #333; text-transform: uppercase;">Mobile Viewport</div>
+                        <div style="font-size: 12px; color: #666;">${viewportMsg}</div>
+                    </div>
+                </div>
+
+                <div style="display: flex !important; flex-direction: row !important; align-items: center !important; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #eee;">
+                    <div style="font-size: 24px; margin-right: 12px;">${faviconIcon}</div>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="font-weight: bold; font-size: 14px; color: #333; text-transform: uppercase;">Site Icon</div>
+                        <div style="font-size: 12px; color: #666;">${faviconMsg}</div>
+                    </div>
+                </div>
+
+            </div>`;
+
+            let techAdvice = "✅ การตั้งค่าทางเทคนิคถูกต้อง";
             let techAdviceClass = "";
 
-            if (techIssues.length > 0) {
-                if (isCritical) {
-                    techAdvice = "🔴 พบปัญหาร้ายแรง! " + techIssues.join(", ");
-                    techAdviceClass = "advice-warning";
-                } else {
-                    techAdvice = "⚠️ พบปัญหาเล็กน้อย: " + techIssues.join(", ");
-                    techAdviceClass = "advice-warning"; // Orange
-                }
+            if (isCritical) {
+                techAdvice = "🔴 พบปัญหาร้ายแรงทางเทคนิค! โปรดตรวจสอบรายการสีแดงด้านล่างทันที";
+                techAdviceClass = "advice-warning";
+            } else if (techScore < 10) {
+                techAdvice = "⚠️ การตั้งค่าพื้นฐานยังไม่ครบถ้วนตามหลัก SEO";
+                techAdviceClass = "advice-warning";
             }
 
             items.push({
@@ -1147,18 +1336,21 @@ Write a valid JSON-LD "FAQPage" Schema markup for this page.
                 maxScore: 10,
                 pass: techScore >= 8 && !isCritical,
                 autoOpen: isCritical,
-                dataLabel: "ผลการตรวจสอบ Technical SEO",
+                dataLabel: "ผลตรวจสุขภาพเว็บไซต์ (Health Check)",
                 advice: techAdvice,
                 adviceClass: techAdviceClass,
-                dataContent: `Canonical: ${canonical || 'Missing'}\nRobots: ${robots || 'Default (Index/Follow)'}\nViewport: ${viewport || 'Missing'}\nFavicon: ${favicon || 'Missing'}`,
+                dataContent: techGridHtml,
+                hideCopy: true, // Hide Copy Button
                 copyText: `Canonical: ${canonical}\nRobots: ${robots}\nViewport: ${viewport}`
             });
 
             // Calc Total
-            const totalScore = items.reduce((acc, item) => acc + item.score, 0);
+            const rawScore = items.reduce((acc, item) => acc + item.score, 0);
+            const totalMax = items.reduce((acc, item) => acc + item.maxScore, 0);
+            const finalScore = totalMax > 0 ? Math.round((rawScore / totalMax) * 100) : 0;
 
             return {
-                score: totalScore,
+                score: finalScore,
                 items: items
             };
         }
@@ -1204,9 +1396,7 @@ Write a valid JSON-LD "FAQPage" Schema markup for this page.
                     <div class="accordion-content">
                         <div class="data-label">
                             <span>${item.dataLabel}</span>
-                            <button class="copy-btn" onclick="event.stopPropagation(); copyData('${item.id}')">
-                                คัดลอก
-                            </button>
+                            ${item.hideCopy ? '' : `<button class="copy-btn" onclick="event.stopPropagation(); copyData('${item.id}')">คัดลอก</button>`}
                         </div>
                         <div class="raw-data-box" id="raw-${item.id}">${item.dataContent}</div>
                         
