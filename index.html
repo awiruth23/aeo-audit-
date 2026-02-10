@@ -480,20 +480,79 @@
             color: var(--primary);
             font-size: 0.875rem;
             cursor: pointer;
-            text-decoration: underline;
-            padding: 0;
-            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        /* Developer Fix Box (Terminal Check) */
+        .dev-fix-box {
+            margin-top: 1rem;
+            background-color: #111827;
+            /* Gray-900 */
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid #374151;
+            /* Gray-700 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .dev-fix-header {
+            background-color: #1f2937;
+            /* Gray-800 */
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #374151;
+        }
+
+        .dev-fix-title {
+            color: #fbbf24;
+            /* Amber */
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             font-family: 'Sarabun', sans-serif;
         }
 
-        .schema-code-container {
-            display: none;
-            margin-top: 0.5rem;
+        .dev-fix-copy-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
         }
 
-        .schema-code-container.show {
-            display: block;
+        .dev-fix-copy-btn:hover {
+            background-color: #1d4ed8;
         }
+
+        .dev-fix-copy-btn.copied {
+            background-color: #10b981;
+
+            .dev-fix-content {
+                padding: 1rem;
+                color: #4ade80;
+                /* Terminal Green */
+                font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            }
+
+            .dev-fix-content {
+                padding: 1rem;
+                color: #4ade80;
+                /* Terminal Green */
+                font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                font-size: 0.85rem;
+                white-space: pre-wrap;
+                line-height: 1.6;
+            }
     </style>
 </head>
 
@@ -595,7 +654,7 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(htmlContent, 'text/html');
 
-                const results = performAnalysis(doc);
+                const results = performAnalysis(doc, url); // Pass url to performAnalysis
                 renderResults(results);
                 document.getElementById('results-area').style.display = 'block';
 
@@ -607,7 +666,8 @@
             }
         }
 
-        function performAnalysis(doc) {
+        function performAnalysis(doc, pageUrl) { // Accept pageUrl as argument
+            const targetUrl = pageUrl; // Fix: Assign pageUrl to targetUrl for sub-modules
             const items = [];
 
             // 1. Meta Tags Analysis
@@ -721,59 +781,177 @@
                 copyText: matchedKeywords.join(', ')
             });
 
-            // 4. Schema Markup
+            // 4. Schema Markup (Deep Dive & Strict Scoring + Smart Fix)
             const scripts = Array.from(doc.querySelectorAll('script[type="application/ld+json"]'));
-            const schemaPass = scripts.length > 0;
-            let schemaDetails = "ไม่พบโค้ด JSON-LD Schema";
-            let schemaCopy = "";
-            let schemaType = "Unknown";
+            let typesFound = [];
+            let rawJsonList = [];
 
-            if (schemaPass) {
+            // 1. Deep Dive Extraction
+            scripts.forEach(script => {
                 try {
-                    const json = JSON.parse(scripts[0].innerText);
-                    schemaType = json['@type'] || "Unknown";
-                    schemaDetails = `@type: ${schemaType}\n\n` + JSON.stringify(json, null, 2).substring(0, 500) + "...";
-                    schemaCopy = JSON.stringify(json, null, 2);
+                    const json = JSON.parse(script.innerText);
+                    rawJsonList.push(json);
+
+                    // Check 1: @graph
+                    if (json['@graph'] && Array.isArray(json['@graph'])) {
+                        json['@graph'].forEach(item => {
+                            if (item['@type']) typesFound.push(item['@type']);
+                        });
+                    }
+                    // Check 2: Top-level @type
+                    else if (json['@type']) {
+                        const t = json['@type'];
+                        if (Array.isArray(t)) typesFound.push(...t);
+                        else typesFound.push(t);
+                    }
                 } catch (e) {
-                    schemaDetails = "พบ Script แต่ไม่สามารถอ่าน JSON ได้";
+                    console.error("Schema Parse Error", e);
                 }
+            });
+
+            // Clean up: Flatten & Unique
+            typesFound = [...new Set(typesFound.flat())].filter(t => t);
+
+            // 2. Strict Scoring
+            let schemaScore = 0;
+            const hasAeo = typesFound.some(t => ['FAQPage', 'HowTo', 'QAPage'].includes(t));
+            const hasRich = typesFound.some(t => ['Article', 'NewsArticle', 'Product', 'Review', 'VideoObject'].includes(t));
+
+            if (hasAeo) {
+                schemaScore = 20;
+            } else if (hasRich) {
+                schemaScore = 10;
+            } else {
+                schemaScore = 0;
             }
 
-            // Smart Advice: Schema
+            // 3. UI & Advice & Smart Fix
+            const schemaPass = schemaScore >= 10;
             let schemaAdvice = "";
-            if (schemaPass) {
-                schemaAdvice = `ระบบตรวจพบ Schema แบบ ${schemaType} แล้ว! Google จะเข้าใจโครงสร้างเว็บคุณได้ง่ายขึ้นครับ`;
+            let schemaAdviceClass = "";
+            let fixHtml = "";
+
+            // Get Context for Prompt
+            const pageTitle = doc.title || (doc.querySelector('h1') ? doc.querySelector('h1').innerText : "This Page");
+
+            if (schemaScore === 20) {
+                schemaAdvice = "🏆 โครงสร้างระดับเทพ! มี Schema สาย AEO ครบถ้วน";
             } else {
-                schemaAdvice = `เสียดาย! เว็บยังไม่มี Schema Markup ทำให้เสียโอกาสในการแสดงผลแบบ Rich Snippet (เช่น ดาวรีวิว, ราคา) บนหน้าค้นหาครับ`;
+                if (schemaScore === 10) {
+                    schemaAdvice = "✅ เริ่มมาถูกทาง! พบ Schema สินค้า/บทความแล้ว แต่ถ้าอยากติด Voice Search แนะนำให้เพิ่ม FAQPage หรือ HowTo เพิ่มเติมครับ";
+                } else { // 0
+                    schemaAdvice = "⚠️ สอบตกเรื่อง Voice Search! เว็บคุณมีแค่โครงสร้างพื้นฐาน (Breadcrumb) ซึ่งไม่เพียงพอให้ AI นำไปตอบคำถาม แนะนำให้เพิ่ม FAQPage Schema ด่วนที่สุด!";
+                    schemaAdviceClass = "advice-warning";
+                }
+
+                // Generate Smart Prompt (Geek Feature)
+                const fixPrompt = `Act as a Senior Technical SEO Specialist.
+My website page title is: "${pageTitle}"
+The current Schema Markup is missing "FAQPage" which is crucial for AEO (Voice Search).
+
+Task:
+Write a valid JSON-LD "FAQPage" Schema markup for this page.
+1. Generate 3 frequently asked questions (Q&A) relevant to "${pageTitle}".
+2. The questions should be optimized for Voice Search (Natural Language).
+3. The answers must be concise (40-50 words) to target Featured Snippets.
+4. Output only the JSON-LD code block.`;
+
+                fixHtml = `
+                    <div style="background-color: #f0f9ff; border-left: 4px solid #0284c7; padding: 0.75rem; margin-top: 1rem; border-radius: 0.25rem; font-size: 0.85rem; color: #0c4a6e;">
+                        <strong>💡 วิธีแก้ไข:</strong> คัดลอกคำสั่งในกล่องสีดำด้านล่าง ไปวางใน ChatGPT หรือ Gemini เพื่อให้ AI เขียนโค้ดปรับปรุงเว็บให้คุณอัตโนมัติ
+                    </div>
+                    <div class="dev-fix-box" style="margin-top: 0.5rem;">
+                        <div class="dev-fix-header">
+                            <div class="dev-fix-title">🛠️ Developer Quick Fix</div>
+                            <button class="dev-fix-copy-btn" onclick="copyPromptText(this)">Copy Prompt</button>
+                        </div>
+                        <div class="dev-fix-content">${fixPrompt}</div>
+                    </div>
+                 `;
             }
+
+            const typeLabel = typesFound.length > 0 ? `พบ Schema: ${typesFound.join(', ')}` : "ไม่พบ Schema Markup";
+            const jsonDump = rawJsonList.length > 0 ? JSON.stringify(rawJsonList, null, 2) : "ไม่พบข้อมูล Code";
+
+            // Badges HTML
+            const badgesHtml = typesFound.map(t => {
+                let badgeClass = 'badge-unknown';
+                if (['FAQPage', 'HowTo', 'QAPage'].includes(t)) badgeClass = 'badge-aeo';
+                else if (['Article', 'NewsArticle', 'Product', 'Review'].includes(t)) badgeClass = 'badge-rich';
+                else badgeClass = 'badge-basic';
+                return `<span class="schema-badge ${badgeClass}">${t}</span>`;
+            }).join('');
 
             items.push({
                 id: 'schema',
                 title: "โครงสร้างข้อมูล (Schema Markup)",
-                score: schemaPass ? 20 : 0,
+                score: schemaScore,
                 maxScore: 20,
                 pass: schemaPass,
-                dataLabel: "ตัวอย่าง Code JSON-LD",
+                dataLabel: typeLabel,
                 advice: schemaAdvice,
-                dataContent: schemaDetails,
-                copyText: schemaCopy
+                adviceClass: schemaAdviceClass,
+                dataContent: `<div>${badgesHtml || typeLabel}</div>
+                              ${fixHtml}
+                              <button class="schema-code-toggle" onclick="toggleSchemaCode(this)">ดู Code ฉบับเต็ม ▼</button>
+                              <div class="schema-code-container">${jsonDump}</div>`,
+                copyText: jsonDump
             });
 
-            // 5. Image Alt Text
+            // 5. Image Alt Text (Strict & Evidence-Based)
             const images = Array.from(doc.querySelectorAll('img'));
-            const totalImg = images.length;
-            const missingAlt = images.filter(img => !img.alt || img.alt.trim() === "").length;
-            const altPass = totalImg > 0 ? (missingAlt === 0) : true;
-            const altScore = totalImg > 0 ? (missingAlt === 0 ? 10 : (missingAlt < totalImg / 2 ? 5 : 0)) : 10;
+            let totalAnalyzed = 0;
+            let badImages = [];
 
-            // Smart Advice: Images
+            images.forEach(img => {
+                // Filter: Ignore tiny pixels or hidden images (Best effort)
+                const width = img.getAttribute('width');
+                const height = img.getAttribute('height');
+                const style = img.getAttribute('style') || "";
+
+                if (style.includes('display: none')) return;
+                if (width && parseInt(width) < 5) return;
+                if (height && parseInt(height) < 5) return;
+
+                totalAnalyzed++;
+
+                // Check Alt
+                const alt = img.getAttribute('alt');
+                if (alt === null || alt.trim() === "") {
+                    // Collect evidence (Max 5)
+                    const src = img.getAttribute('src') || "(No SRC)";
+                    badImages.push(src);
+                }
+            });
+
+            // Scoring
+            let altScore = 0;
+            if (badImages.length === 0) altScore = 10;
+            else if (badImages.length <= 2) altScore = 5;
+            else altScore = 0;
+
+            const altPass = altScore >= 5;
+
+            // Advice
             let imgAdvice = "";
-            if (totalImg === 0) {
-                imgAdvice = "ไม่พบรูปภาพในหน้านี้";
-            } else if (missingAlt === 0) {
-                imgAdvice = `รูปภาพทั้ง ${totalImg} รูป มีคำอธิบาย (Alt Text) ครบถ้วน ดีต่อ SEO และการค้นหารูปภาพมากครับ`;
+            let imgAdviceClass = "";
+
+            if (totalAnalyzed === 0) {
+                imgAdvice = "ไม่พบรูปภาพในหน้านี้ (หรือรูปภาพซ่อนอยู่)";
+                altScore = 10; // Neutral/Pass
+            } else if (badImages.length === 0) {
+                imgAdvice = `✅ รูปภาพทั้ง ${totalAnalyzed} รูป มีคำอธิบาย (Alt Text) ครบถ้วน ดีต่อ SEO และการค้นหารูปภาพมากครับ`;
             } else {
-                imgAdvice = `มีรูปภาพ ${missingAlt} รูป จาก ${totalImg} รูป ที่ยังไม่มีคำอธิบาย (Alt Text) Google จะไม่รู้ว่ารูปนี้คือรูปอะไร แนะนำให้ไปเติมด่วนครับ`;
+                imgAdvice = `⚠️ พบรูปภาพ ${badImages.length} รูป (จาก ${totalAnalyzed}) ที่ไม่มีคำอธิบาย (Alt Text) ซึ่งทำให้ Google อ่านไม่ออก`;
+                if (badImages.length > 2) imgAdviceClass = "advice-warning";
+            }
+
+            // Evidence List
+            let evidenceHtml = "";
+            if (badImages.length > 0) {
+                const listItems = badImages.slice(0, 5).map(src => `<li style="margin-bottom:4px;word-break:break-all;">${src.substring(0, 80)}${src.length > 80 ? '...' : ''}</li>`).join('');
+                evidenceHtml = `<ul style="margin-top:0.5rem; padding-left:1.5rem; font-size:0.85rem; color:#b91c1c;">${listItems}</ul>`;
+                if (badImages.length > 5) evidenceHtml += `<div style="font-size:0.8rem; margin-top:4px; color:#666;">(และอีก ${badImages.length - 5} รูป...)</div>`;
             }
 
             items.push({
@@ -781,11 +959,14 @@
                 title: "คำอธิบายรูปภาพ (Image Alt Text)",
                 score: altScore,
                 maxScore: 10,
-                pass: altScore >= 5,
-                dataLabel: "สถิติรูปภาพ",
+                pass: altPass,
+                dataLabel: "ผลการตรวจสอบ Alt Text",
                 advice: imgAdvice,
-                dataContent: `รูปภาพทั้งหมด: ${totalImg}\nขาด Alt Text: ${missingAlt}`,
-                copyText: `Total Images: ${totalImg}\nMissing Alt: ${missingAlt}`
+                adviceClass: imgAdviceClass,
+                dataContent: `<div>รูปภาพที่ตรวจสอบ: ${totalAnalyzed}</div>
+                              <div>ไม่มี Alt Text: <strong>${badImages.length}</strong></div>
+                              ${evidenceHtml}`,
+                copyText: `Total Images Analyzed: ${totalAnalyzed}\nMissing Alt: ${badImages.length}\nSample Missing: ${badImages.slice(0, 5).join(', ')}`
             });
 
             // 6. Content Depth
@@ -821,6 +1002,158 @@
                 copyText: `Word Count: ${wordCount}\n\nFirst Paragraph:\n${firstP ? firstP.innerText : ''}`
             });
 
+            // 7. Link Health Structure
+            const allLinks = Array.from(doc.querySelectorAll('a'));
+            const host = new URL(targetUrl).hostname;
+            let internal = 0, external = 0, empty = 0;
+
+            allLinks.forEach(a => {
+                const href = a.getAttribute('href');
+                if (!href || href === '#' || href.toLowerCase().startsWith('javascript:')) {
+                    empty++;
+                } else {
+                    try {
+                        const linkUrl = new URL(href, targetUrl);
+                        if (linkUrl.hostname === host) internal++;
+                        else external++;
+                    } catch (e) { empty++; }
+                }
+            });
+
+            let linkScore = 0;
+            if (internal > 2) linkScore += 5;
+            if (external > 0) linkScore += 5;
+            if (empty > 0) linkScore = Math.max(0, linkScore - 5); // Penalty
+
+            items.push({
+                id: 'links',
+                title: "โครงสร้างลิงก์ (Link Health)",
+                score: linkScore,
+                maxScore: 10,
+                pass: linkScore >= 5 && empty === 0,
+                dataLabel: "สถิติลิงก์",
+                advice: empty > 0 ? `❌ พบลิงก์เปล่า ${empty} จุด (เช่น #) ควรแก้ไขครับ` : (internal === 0 ? "⚠️ เว็บนี้ไม่มีการเชื่อมโยงภายใน (Internal Linking) ทำให้ Google เก็บข้อมูลยาก" : "✅ โครงสร้างลิงก์มีการเชื่อมโยงภายนอกและภายในที่ดีครับ"),
+                dataContent: `Internal: ${internal}, External: ${external}, Empty/Broken: ${empty}`,
+                copyText: `Internal: ${internal}\nExternal: ${external}\nBroken: ${empty}`
+            });
+
+            // 9. AI Readability (Structure)
+            const listCount = doc.querySelectorAll('ul, ol').length;
+            const tableCount = doc.querySelectorAll('table').length;
+            const boldCount = doc.querySelectorAll('strong, b').length;
+
+            let aiScore = 0;
+            if (listCount >= 2) aiScore += 5;
+            if (tableCount > 0) aiScore += 3;
+            if (boldCount > 5) aiScore += 2;
+            // Cap at 10 (Though total above is 10)
+
+            items.push({
+                id: 'ai-read',
+                title: "โครงสร้างเนื้อหาสำหรับ AI (AI Readability)",
+                score: aiScore,
+                maxScore: 10,
+                pass: aiScore >= 5,
+                dataLabel: "องค์ประกอบที่เป็นมิตรกับ AI",
+                advice: aiScore > 7 ? "💡 เยี่ยม! มีการใช้ Bullet Points, ตาราง และตัวหนา ช่วยให้ AI นำข้อมูลไปสรุปได้ง่าย" : "💡 เคล็ดลับ AEO: การใช้ Bullet Points (Lists) และ ตาราง (Table) ช่วยให้ AI เข้าใจข้อมูลได้ดีขึ้น ควรเพิ่มนะครับ",
+                dataContent: `Lists (ul/ol): ${listCount}\nTables: ${tableCount}\nBold Text: ${boldCount}`,
+                copyText: `Lists: ${listCount}\nTables: ${tableCount}\nBold: ${boldCount}`
+            });
+
+            // 10. Technical Performance (Resource Count)
+            const scriptCount = doc.querySelectorAll('script').length;
+            const cssCount = doc.querySelectorAll('link[rel="stylesheet"], style').length;
+
+            let perfScore = 10;
+            let perfAdvice = "🟢 จำนวนสคริปต์อยู่ในเกณฑ์ดี";
+
+            if (scriptCount > 15) {
+                perfScore -= 5;
+                perfAdvice = `🔴 พบ JavaScript ${scriptCount} ไฟล์! เสี่ยงทำให้เว็บโหลดช้า`;
+            } else if (cssCount > 10) {
+                perfAdvice = `🟠 ไฟล์ CSS เยอะเกินไป (${cssCount}) ควรจัดการรวมไฟล์`;
+            }
+
+            items.push({
+                id: 'perf',
+                title: "ประสิทธิภาพทางเทคนิค (Resource Count)",
+                score: perfScore,
+                maxScore: 10,
+                pass: perfScore > 5,
+                dataLabel: "จำนวนไฟล์ Resource",
+                advice: perfAdvice,
+                dataContent: `Scripts (JS): ${scriptCount}\nStyles (CSS): ${cssCount}`,
+                copyText: `JS Files: ${scriptCount}\nCSS Files: ${cssCount}`
+            });
+
+            // 11. Technical & Indexing (Critical Checks)
+            const canonical = doc.querySelector('link[rel="canonical"]')?.href || "";
+            const robots = doc.querySelector('meta[name="robots"]')?.content || "";
+            const viewport = doc.querySelector('meta[name="viewport"]')?.content || "";
+            const favicon = doc.querySelector('link[rel="icon"], link[rel="shortcut icon"]')?.href || "";
+
+            let techScore = 0;
+            let techIssues = [];
+            let isCritical = false; // For Auto-Open
+
+            // Canonical
+            if (canonical) {
+                techScore += 4;
+            } else {
+                techIssues.push("⚠️ ไม่พบ Canonical Tag");
+            }
+
+            // Robots
+            if (robots.includes("noindex")) {
+                techIssues.push("🔴 Critical: พบ 'noindex' (Google ไม่เก็บข้อมูล)");
+                isCritical = true;
+                techScore = 0; // Fail immediately
+            } else {
+                techScore += 3;
+            }
+
+            // Viewport
+            if (viewport) {
+                techScore += 2;
+            } else {
+                techIssues.push("🔴 Critical: ไม่พบ Viewport Tag (Mobile ตาย)");
+                isCritical = true;
+            }
+
+            // Favicon
+            if (favicon) {
+                techScore += 1;
+            } else {
+                techIssues.push("🟠 ไม่พบ Favicon");
+            }
+
+            let techAdvice = "✅ การตั้งค่าทางเทคนิคถูกต้อง (Index ได้, รองรับมือถือ)";
+            let techAdviceClass = "";
+
+            if (techIssues.length > 0) {
+                if (isCritical) {
+                    techAdvice = "🔴 พบปัญหาร้ายแรง! " + techIssues.join(", ");
+                    techAdviceClass = "advice-warning";
+                } else {
+                    techAdvice = "⚠️ พบปัญหาเล็กน้อย: " + techIssues.join(", ");
+                    techAdviceClass = "advice-warning"; // Orange
+                }
+            }
+
+            items.push({
+                id: 'tech',
+                title: "ความถูกต้องทางเทคนิค (Technical & Indexing)",
+                score: techScore,
+                maxScore: 10,
+                pass: techScore >= 8 && !isCritical,
+                autoOpen: isCritical,
+                dataLabel: "ผลการตรวจสอบ Technical SEO",
+                advice: techAdvice,
+                adviceClass: techAdviceClass,
+                dataContent: `Canonical: ${canonical || 'Missing'}\nRobots: ${robots || 'Default (Index/Follow)'}\nViewport: ${viewport || 'Missing'}\nFavicon: ${favicon || 'Missing'}`,
+                copyText: `Canonical: ${canonical}\nRobots: ${robots}\nViewport: ${viewport}`
+            });
+
             // Calc Total
             const totalScore = items.reduce((acc, item) => acc + item.score, 0);
 
@@ -854,7 +1187,7 @@
 
             results.items.forEach(item => {
                 const el = document.createElement('div');
-                el.className = 'accordion-item';
+                el.className = `accordion-item ${item.autoOpen ? 'active' : ''}`; // Handle Auto-Open
 
                 el.innerHTML = `
                     <div class="accordion-header" onclick="toggleAccordion(this)">
@@ -932,6 +1265,77 @@
 
         function hideError() {
             document.getElementById('errorMsg').style.display = 'none';
+        }
+
+        function toggleSchemaCode(btn) {
+            const container = btn.nextElementSibling;
+            container.classList.toggle('show');
+            if (container.classList.contains('show')) {
+                btn.innerText = 'ซ่อน Code ▲';
+            } else {
+                btn.innerText = 'ดู Code ฉบับเต็ม ▼';
+            }
+        }
+
+        function copyPromptText(btn) {
+            // Find the content div (sibling of header)
+            const contentDiv = btn.parentElement.nextElementSibling;
+            const textToCopy = contentDiv.innerText;
+
+            // Robust Copy Logic
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showCopyFeedback(btn);
+                }).catch(err => {
+                    console.error('Clipboard API failed', err);
+                    fallbackCopyText(textToCopy, btn);
+                });
+            } else {
+                fallbackCopyText(textToCopy, btn);
+            }
+        }
+
+        function fallbackCopyText(text, btn) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+
+            // Ensure invisible but part of DOM
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) showCopyFeedback(btn);
+            } catch (err) {
+                console.error('Fallback copy failed', err);
+                alert('Copy failed. Please select text and copy manually.');
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function showCopyFeedback(btn) {
+            const originalText = btn.innerText;
+            btn.innerText = 'Copied! ✅';
+            btn.classList.add('copied');
+
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.classList.remove('copied');
+            }, 2000);
+        }
+
+        function copyToClipboard(text) {
+            // Keep old function just in case, or alias it
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Prompt Copied to Clipboard!");
+            });
         }
     </script>
 </body>
