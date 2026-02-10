@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เครื่องมือตรวจ AEO/SEO ภาษาไทย</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --code-bg: #f1f5f9;
+            --advice-bg: #fffbeb;
+            /* Soft Yellow */
+            --advice-text: #92400e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            /* Thai friendly font */
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* Header & Input Section */
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .input-group {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        input[type="url"] {
+            flex: 1;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+            min-width: 250px;
+        }
+
+        input[type="url"]:focus {
+            border-color: var(--primary);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Section */
+        #results-area {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Gauge Card */
+        .card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        .gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .gauge {
+            position: relative;
+            width: 200px;
+            height: 100px;
+            border-radius: 200px 200px 0 0;
+            background: #e2e8f0;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .gauge-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--success);
+            transform-origin: bottom center;
+            transform: rotate(-180deg);
+            transition: transform 1.5s cubic-bezier(0.1, 0.7, 1.0, 0.1);
+        }
+
+        .gauge-cover {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 80px;
+            background: var(--card-bg);
+            border-radius: 160px 160px 0 0;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-top: -3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .score-label {
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        /* Accordion List */
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .accordion-item {
+            background: var(--card-bg);
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+
+        .accordion-item:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .accordion-header {
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            background: var(--card-bg);
+            user-select: none;
+        }
+
+        .accordion-header:hover {
+            background-color: #f8fafc;
+        }
+
+        .status-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .status-pass {
+            color: var(--success);
+            background: #dcfce7;
+        }
+
+        .status-fail {
+            color: var(--danger);
+            background: #fee2e2;
+        }
+
+        .acc-title {
+            flex: 1;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .acc-score {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-right: 1rem;
+            padding: 0.25rem 0.5rem;
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+        }
+
+        .chevron {
+            transition: transform 0.3s ease;
+            color: var(--text-muted);
+        }
+
+        .accordion-item.active .chevron {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            background-color: #fcfcfc;
+            border-top: 1px solid transparent;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 1000px;
+            /* Expand limit */
+            padding: 1.25rem;
+            border-top-color: var(--border);
+            overflow-y: auto;
+        }
+
+        .data-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .advice-box {
+            background-color: var(--advice-bg);
+            color: var(--advice-text);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .advice-warning {
+            background-color: #fff7ed;
+            color: #9a3412;
+            border-left-color: #f97316;
+        }
+
+        .raw-data-box {
+            background: var(--code-bg);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.875rem;
+            color: #334155;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .tag-h1 {
+            color: #f59e0b;
+            font-weight: 700;
+        }
+
+        .tag-h2 {
+            color: #2563eb;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+
+        .tag-h3 {
+            color: #64748b;
+            margin-left: 2rem;
+        }
+
+        .copy-btn {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--text-muted);
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        .copy-btn:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Loading Spinner */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .loader-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2e8f0;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-message {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #fecaca;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="loader-overlay" id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>เครื่องมือตรวจ AEO/SEO</h1>
+            <p class="subtitle">วิเคราะห์คะแนนความพร้อมสำหรับ Answer Engine Optimization</p>
+        </header>
+
+        <div class="input-group">
+            <input type="url" id="urlInput" placeholder="https://example.com" required>
+            <button id="analyzeBtn" onclick="analyzeSite()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                วิเคราะห์เว็บไซต์
+            </button>
+        </div>
+
+        <div id="errorMsg" class="error-message"></div>
+
+        <div id="results-area">
+            <div class="dashboard-grid">
+
+                <!-- Score Card -->
+                <div class="card gauge-container">
+                    <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 2rem;">คะแนนรวม</h2>
+                    <div class="gauge">
+                        <div class="gauge-fill" id="gaugeFill"></div>
+                        <div class="gauge-cover"></div>
+                    </div>
+                    <div class="score-display" id="scoreValue">0</div>
+                    <div class="score-label" id="scoreText">กำลังคำนวณ...</div>
+                </div>
+
+                <!-- Accordion Results -->
+                <div class="accordion" id="accordionList">
+                    <!-- Items will be injected here -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Robust Proxy Configuration ---
+        const PROXIES = [
+            'https://api.allorigins.win/raw?url=',
+            'https://corsproxy.io/?',
+            'https://api.codetabs.com/v1/proxy?quest=',
+            'https://thingproxy.freeboard.io/fetch/'
+        ];
+
+        async function fetchWithFallback(targetUrl) {
+            const encodedUrl = encodeURIComponent(targetUrl);
+            let lastError = null;
+
+            for (const proxy of PROXIES) {
+                try {
+                    console.log(`Trying proxy: ${proxy}`);
+                    const response = await fetch(proxy + encodedUrl);
+                    if (!response.ok) throw new Error(`Status ${response.status}`);
+
+                    const text = await response.text();
+                    if (!text || text.trim().length === 0) throw new Error('Empty response');
+                    return text;
+
+                } catch (err) {
+                    console.warn(`Proxy failed: ${proxy}`, err);
+                    lastError = err;
+                }
+            }
+            throw new Error('ขออภัย! เว็บไซต์ปลายทางมีระบบความปลอดภัยสูง (Firewall) ทำให้เครื่องมือฟรีไม่สามารถเข้าถึงได้ กรุณาลองกับเว็บไซต์อื่น หรือลองใหม่ในภายหลัง');
+        }
+
+        async function analyzeSite() {
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value.trim();
+
+            if (!url) {
+                showError("กรุณากรอก URL ที่ถูกต้อง");
+                return;
+            }
+
+            hideError();
+            setLoading(true);
+            document.getElementById('results-area').style.display = 'none';
+
+            try {
+                const htmlContent = await fetchWithFallback(url);
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlContent, 'text/html');
+
+                const results = performAnalysis(doc);
+                renderResults(results);
+                document.getElementById('results-area').style.display = 'block';
+
+            } catch (err) {
+                showError(err.message);
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function performAnalysis(doc) {
+            const items = [];
+
+            // 1. Meta Tags Analysis
+            const title = doc.querySelector('title') ? doc.querySelector('title').innerText.trim() : "";
+            const metaDesc = doc.querySelector('meta[name="description"]') ? doc.querySelector('meta[name="description"]').content.trim() : "";
+
+            const titleLen = title.length;
+            const descLen = metaDesc.length;
+            const titlePass = titleLen >= 30 && titleLen <= 65;
+            const descPass = descLen >= 50 && descLen <= 160;
+            const metaScore = (titlePass ? 10 : 0) + (descPass ? 10 : 0);
+
+            // Smart Advice: Meta Tags
+            let titleAdvice = "";
+            if (titleLen > 65) {
+                titleAdvice = `Title ยาว ${titleLen} ตัวอักษร (เกินมา ${titleLen - 65} ตัว) ข้อความส่วนท้ายมีความเสี่ยงถูก Google ตัดทิ้งครับ`;
+            } else if (titleLen < 30) {
+                titleAdvice = `Title สั้นไปนิด (แค่ ${titleLen} ตัว) คุณกำลังเสียพื้นที่โฆษณาฟรี ลองเพิ่มจุดเด่นสินค้าเข้าไปอีกนิดครับ`;
+            } else {
+                titleAdvice = `ความยาว Title กำลังดีเยี่ยม (${titleLen} ตัว) แสดงผลบน Google ได้ครบถ้วนครับ`;
+            }
+
+            let descAdvice = "";
+            if (descLen > 160) {
+                descAdvice = `Description ยาวเกินไป (${descLen} ตัว) สาระสำคัญตอนท้ายอาจหายไปครับ`;
+            } else if (descLen < 50) {
+                descAdvice = `Description สั้นเกินไป ลองเขียนเชิญชวนให้คนอยากคลิกเพิ่มอีกหน่อยนะครับ`;
+            } else {
+                descAdvice = `ความยาว Description ดีมาก (${descLen} ตัว) น่าอ่านครับ`;
+            }
+
+            items.push({
+                id: 'meta',
+                title: "Meta Tags (Title & Description)",
+                score: metaScore,
+                maxScore: 20,
+                pass: metaScore >= 10,
+                dataLabel: "หัวข้อหน้าเว็บ (Title) และคำอธิบาย (Description)",
+                advice: `<strong>Title:</strong> ${titleAdvice}<br><br><strong>Description:</strong> ${descAdvice}`,
+                dataContent: `Title (${titleLen} chars):\n${title}\n\nDescription (${descLen} chars):\n${metaDesc || "ไม่พบ Meta Description"}`,
+                copyText: `Title:\n${title}\n\nDescription:\n${metaDesc}`
+            });
+
+            // 2. Headings
+            const headers = Array.from(doc.querySelectorAll('h1, h2, h3'));
+            const headerData = headers.map(h => ({
+                tag: h.tagName.toLowerCase(),
+                text: h.innerText.trim()
+            })).filter(h => h.text.length > 0);
+
+            const h1 = headerData.find(h => h.tag === 'h1');
+            const h1Pass = !!h1 && h1.text.length > 10;
+
+            const h3Count = headerData.filter(h => h.tag === 'h3').length;
+
+            let headingAdvice = "";
+            let headingClass = "";
+
+            if (!h1) {
+                headingAdvice = "ไม่พบ H1! ควรมี H1 หนึ่งอันเพื่อบอกหัวข้อหลักของหน้านะครับ";
+                headingClass = "advice-warning";
+            } else if (h3Count > 0) {
+                headingAdvice = "วางโครงสร้างได้ดีมาก! มีการไล่ลำดับ H1 > H2 > H3 ชัดเจน AI ชอบครับ";
+            } else { // h3Count === 0
+                headingAdvice = "โครงสร้างพื้นฐานใช้ได้ (มี H1, H2) แต่ยังขาดหัวข้อย่อยระดับ H3 แนะนำให้เพิ่ม H3 เพื่อแบ่งกลุ่มเนื้อหาให้ละเอียดยิ่งขึ้นครับ";
+                headingClass = "advice-warning";
+            }
+
+            items.push({
+                id: 'headings',
+                title: "โครงสร้างหัวข้อ (Heading Structure)",
+                score: h1Pass ? 15 : 0,
+                maxScore: 15,
+                pass: h1Pass,
+                dataLabel: "รายการหัวข้อที่พบ (H1-H3)",
+                advice: headingAdvice,
+                adviceClass: headingClass,
+                dataContent: headerData.map(h => `<span class='tag-${h.tag}'>[${h.tag.toUpperCase()}]</span> ${h.text}`).join('\n') || "ไม่พบ H1-H3",
+                copyText: headerData.map(h => `[${h.tag.toUpperCase()}] ${h.text}`).join('\n')
+            });
+
+            // 3. Voice Search
+            const targetKeywords = ['คืออะไร', 'ไหม', 'ราคา', 'วิธี', 'How to', 'What is', 'How much', 'Cost', 'Guide', 'Best'];
+            const matchedKeywords = [];
+            headerData.forEach(h => {
+                targetKeywords.forEach(kw => {
+                    if (h.text.toLowerCase().includes(kw.toLowerCase()) && !matchedKeywords.includes(kw)) {
+                        matchedKeywords.push(kw);
+                    }
+                });
+            });
+            const voicePass = matchedKeywords.length > 0;
+
+            // Smart Advice: Voice Search
+            let voiceAdvice = "";
+            if (voicePass) {
+                voiceAdvice = `ยอดเยี่ยม! พบคำว่า ${matchedKeywords.join(', ')} ในหัวข้อแล้ว รองรับพฤติกรรมการค้นหาแบบถาม-ตอบได้ดีครับ`;
+            } else {
+                voiceAdvice = `ยังไม่พบรูปประโยคคำถามใน H2/H3 เลยครับ แนะนำให้ลองเปลี่ยนหัวข้อบางอันเป็น "ราคาเท่าไหร่", "คืออะไร", "ดีไหม" ดูนะครับ`;
+            }
+
+            items.push({
+                id: 'voice',
+                title: "การค้นหาด้วยเสียง (Voice Search)",
+                score: voicePass ? 20 : 0,
+                maxScore: 20,
+                pass: voicePass,
+                dataLabel: "Keyword คำถามที่พบในหัวข้อ",
+                advice: voiceAdvice,
+                dataContent: voicePass ? `พบคำค้นหา: ${matchedKeywords.join(', ')}` : "ไม่พบคำคีย์เวิร์ดรูปแบบคำถามใน H1-H3",
+                copyText: matchedKeywords.join(', ')
+            });
+
+            // 4. Schema Markup
+            const scripts = Array.from(doc.querySelectorAll('script[type="application/ld+json"]'));
+            const schemaPass = scripts.length > 0;
+            let schemaDetails = "ไม่พบโค้ด JSON-LD Schema";
+            let schemaCopy = "";
+            let schemaType = "Unknown";
+
+            if (schemaPass) {
+                try {
+                    const json = JSON.parse(scripts[0].innerText);
+                    schemaType = json['@type'] || "Unknown";
+                    schemaDetails = `@type: ${schemaType}\n\n` + JSON.stringify(json, null, 2).substring(0, 500) + "...";
+                    schemaCopy = JSON.stringify(json, null, 2);
+                } catch (e) {
+                    schemaDetails = "พบ Script แต่ไม่สามารถอ่าน JSON ได้";
+                }
+            }
+
+            // Smart Advice: Schema
+            let schemaAdvice = "";
+            if (schemaPass) {
+                schemaAdvice = `ระบบตรวจพบ Schema แบบ ${schemaType} แล้ว! Google จะเข้าใจโครงสร้างเว็บคุณได้ง่ายขึ้นครับ`;
+            } else {
+                schemaAdvice = `เสียดาย! เว็บยังไม่มี Schema Markup ทำให้เสียโอกาสในการแสดงผลแบบ Rich Snippet (เช่น ดาวรีวิว, ราคา) บนหน้าค้นหาครับ`;
+            }
+
+            items.push({
+                id: 'schema',
+                title: "โครงสร้างข้อมูล (Schema Markup)",
+                score: schemaPass ? 20 : 0,
+                maxScore: 20,
+                pass: schemaPass,
+                dataLabel: "ตัวอย่าง Code JSON-LD",
+                advice: schemaAdvice,
+                dataContent: schemaDetails,
+                copyText: schemaCopy
+            });
+
+            // 5. Image Alt Text
+            const images = Array.from(doc.querySelectorAll('img'));
+            const totalImg = images.length;
+            const missingAlt = images.filter(img => !img.alt || img.alt.trim() === "").length;
+            const altPass = totalImg > 0 ? (missingAlt === 0) : true;
+            const altScore = totalImg > 0 ? (missingAlt === 0 ? 10 : (missingAlt < totalImg / 2 ? 5 : 0)) : 10;
+
+            // Smart Advice: Images
+            let imgAdvice = "";
+            if (totalImg === 0) {
+                imgAdvice = "ไม่พบรูปภาพในหน้านี้";
+            } else if (missingAlt === 0) {
+                imgAdvice = `รูปภาพทั้ง ${totalImg} รูป มีคำอธิบาย (Alt Text) ครบถ้วน ดีต่อ SEO และการค้นหารูปภาพมากครับ`;
+            } else {
+                imgAdvice = `มีรูปภาพ ${missingAlt} รูป จาก ${totalImg} รูป ที่ยังไม่มีคำอธิบาย (Alt Text) Google จะไม่รู้ว่ารูปนี้คือรูปอะไร แนะนำให้ไปเติมด่วนครับ`;
+            }
+
+            items.push({
+                id: 'images',
+                title: "คำอธิบายรูปภาพ (Image Alt Text)",
+                score: altScore,
+                maxScore: 10,
+                pass: altScore >= 5,
+                dataLabel: "สถิติรูปภาพ",
+                advice: imgAdvice,
+                dataContent: `รูปภาพทั้งหมด: ${totalImg}\nขาด Alt Text: ${missingAlt}`,
+                copyText: `Total Images: ${totalImg}\nMissing Alt: ${missingAlt}`
+            });
+
+            // 6. Content Depth
+            const paragraphs = Array.from(doc.querySelectorAll('p'));
+            const firstP = paragraphs.find(p => p.innerText.trim().length > 50);
+            const bodyText = doc.body.innerText || "";
+            const wordCount = bodyText.trim().split(/\s+/).length;
+
+            let contentScore = 0;
+            if (wordCount > 500) contentScore = 15;
+            else if (wordCount > 300) contentScore = 10;
+            else contentScore = 5;
+
+            // Smart Advice: Content
+            let contentAdvice = "";
+            if (wordCount < 300) {
+                contentAdvice = `เนื้อหาสั้นมาก (${wordCount} คำ) เสี่ยงต่อการเป็น Thin Content แนะนำให้ขยายความเพิ่มอีกอย่างน้อย 2-3 ย่อหน้าครับ`;
+            } else if (wordCount <= 500) {
+                contentAdvice = `เนื้อหาปานกลาง (${wordCount} คำ) พอใช้ได้ แต่ถ้าอยากชนะคู่แข่ง ลองเขียนให้แตะ 600 คำดูนะครับ`;
+            } else {
+                contentAdvice = `เนื้อหาแน่นปึ้ก! (${wordCount} คำ) ความยาวระดับนี้ AI ชอบมากครับ เพราะดูเป็นผู้เชี่ยวชาญรู้จริง`;
+            }
+
+            items.push({
+                id: 'content',
+                title: "ความยาวเนื้อหา (Content Depth)",
+                score: contentScore,
+                maxScore: 15,
+                pass: contentScore >= 10,
+                dataLabel: "สถิติคำและย่อหน้าแรก",
+                advice: contentAdvice,
+                dataContent: `จำนวนคำ: ${wordCount}\n\nย่อหน้าแรก:\n${firstP ? firstP.innerText.substring(0, 200) + '...' : 'ไม่พบย่อหน้าที่ยาวเพียงพอ'}`,
+                copyText: `Word Count: ${wordCount}\n\nFirst Paragraph:\n${firstP ? firstP.innerText : ''}`
+            });
+
+            // Calc Total
+            const totalScore = items.reduce((acc, item) => acc + item.score, 0);
+
+            return {
+                score: totalScore,
+                items: items
+            };
+        }
+
+        function renderResults(results) {
+            // Update Gauge
+            const gaugeFill = document.getElementById('gaugeFill');
+            const scoreValue = document.getElementById('scoreValue');
+            const scoreText = document.getElementById('scoreText');
+
+            const degrees = (results.score / 100) * 180 - 180;
+            gaugeFill.style.transform = `rotate(${degrees}deg)`;
+
+            let color = '#ef4444'; let text = "ต้องปรับปรุง";
+            if (results.score >= 50) { color = '#f59e0b'; text = "พอใช้"; }
+            if (results.score >= 80) { color = '#10b981'; text = "ดีเยี่ยม"; }
+
+            gaugeFill.style.background = color;
+            scoreValue.style.color = color;
+            scoreText.innerText = text;
+            scoreValue.innerText = results.score;
+
+            // Render Accordion
+            const list = document.getElementById('accordionList');
+            list.innerHTML = '';
+
+            results.items.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'accordion-item';
+
+                el.innerHTML = `
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="status-icon ${item.pass ? 'status-pass' : 'status-fail'}">
+                            ${item.pass
+                        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+                        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'
+                    }
+                        </div>
+                        <div class="acc-title">${item.title}</div>
+                        <div class="acc-score">${item.score}/${item.maxScore}</div>
+                        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="data-label">
+                            <span>${item.dataLabel}</span>
+                            <button class="copy-btn" onclick="event.stopPropagation(); copyData('${item.id}')">
+                                คัดลอก
+                            </button>
+                        </div>
+                        <div class="raw-data-box" id="raw-${item.id}">${item.dataContent}</div>
+                        
+                        <div class="advice-box ${item.adviceClass || ''}">
+                            <strong>คำแนะนำ:</strong> <br>
+                            ${item.advice}
+                        </div>
+
+                        <textarea style="display:none;" id="copy-${item.id}">${item.copyText}</textarea>
+                    </div>
+                `;
+                list.appendChild(el);
+            });
+        }
+
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            const isOpen = item.classList.contains('active');
+
+            document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+
+            if (!isOpen) {
+                item.classList.add('active');
+            }
+        }
+
+        function copyData(id) {
+            const text = document.getElementById(`copy-${id}`).value;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("คัดลอกข้อมูลเรียบร้อย!");
+            });
+        }
+
+        function setLoading(isLoading) {
+            const loader = document.getElementById('loader');
+            const btn = document.getElementById('analyzeBtn');
+            if (isLoading) {
+                loader.classList.add('active');
+                btn.disabled = true;
+                btn.innerHTML = 'กำลังวิเคราะห์...';
+            } else {
+                loader.classList.remove('active');
+                btn.disabled = false;
+                btn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    วิเคราะห์เว็บไซต์
+                `;
+            }
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.innerText = msg;
+            el.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
