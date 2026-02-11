@@ -765,9 +765,16 @@
         async function fetchWithFallback(targetUrl) {
             const encodedUrl = encodeURIComponent(targetUrl);
             let lastError = null;
+            const btn = document.getElementById('analyzeBtn');
 
-            for (const proxy of PROXIES) {
+            for (let i = 0; i < PROXIES.length; i++) {
+                const proxy = PROXIES[i];
                 try {
+                    // Update UI if retrying (not the first one)
+                    if (i > 0) {
+                        btn.innerHTML = `กำลังพยายามเชื่อมต่อผ่านช่องทางสำรองที่ ${i}...`;
+                    }
+
                     console.log(`Trying proxy: ${proxy}`);
                     const response = await fetch(proxy + encodedUrl);
                     if (!response.ok) throw new Error(`Status ${response.status}`);
@@ -779,6 +786,8 @@
                 } catch (err) {
                     console.warn(`Proxy failed: ${proxy}`, err);
                     lastError = err;
+                    // Provide immediate feedback before next loop
+                    btn.innerHTML = `การเชื่อมต่อล้มเหลว... กำลังเปลี่ยนเส้นทาง...`;
                 }
             }
             throw new Error('ขออภัย! เว็บไซต์ปลายทางมีระบบความปลอดภัยสูง (Firewall) ทำให้เครื่องมือฟรีไม่สามารถเข้าถึงได้ กรุณาลองกับเว็บไซต์อื่น หรือลองใหม่ในภายหลัง');
