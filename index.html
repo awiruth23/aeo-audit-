@@ -5,24 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เครื่องมือตรวจ AEO/SEO ภาษาไทย</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --bg: #f8fafc;
+            --primary: #0071e3;
+            --primary-hover: #0077ED;
+            --primary-light: rgba(0, 113, 227, 0.08);
+            --success: #34d399;
+            --success-bg: rgba(52, 211, 153, 0.1);
+            --warning: #fbbf24;
+            --warning-bg: rgba(251, 191, 36, 0.08);
+            --danger: #f87171;
+            --danger-bg: rgba(248, 113, 113, 0.08);
+            --bg: #f5f5f7;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --code-bg: #f1f5f9;
-            --advice-bg: #fffbeb;
-            /* Soft Yellow */
-            --advice-text: #92400e;
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --text-tertiary: #86868b;
+            --border: rgba(0, 0, 0, 0.04);
+            --code-bg: #f5f5f7;
+            --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.08);
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 20px;
+            --radius-xl: 24px;
+            --radius-pill: 980px;
+            --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
         * {
@@ -32,105 +44,138 @@
         }
 
         body {
-            font-family: 'Sarabun', sans-serif;
-            /* Thai friendly font */
+            font-family: 'Inter', 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background-color: var(--bg);
-            color: var(--text-main);
-            line-height: 1.6;
+            color: var(--text-primary);
+            line-height: 1.65;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 2rem;
+            padding: 3rem 1.5rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 920px;
         }
 
-        /* Header & Input Section */
+        /* ===== Header ===== */
         header {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 3rem;
         }
 
         h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.04em;
+            line-height: 1.15;
+            margin-bottom: 0.75rem;
+            background: none;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
         }
 
         .subtitle {
-            color: var(--text-muted);
-            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
         }
 
+        /* ===== Input Group ===== */
         .input-group {
             background: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 0.5rem;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
             display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 0;
+            margin-bottom: 2.5rem;
             flex-wrap: wrap;
+            border: none;
+            transition: box-shadow var(--transition), transform var(--transition);
+        }
+
+        .input-group:hover {
+            box-shadow: 0 6px 32px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .input-group:focus-within {
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2), 0 6px 32px rgba(0, 0, 0, 0.06);
         }
 
         input[type="url"] {
             flex: 1;
-            padding: 0.875rem 1.25rem;
-            border: 2px solid var(--border);
-            border-radius: 0.5rem;
-            font-size: 1rem;
+            padding: 1.25rem 1.75rem;
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: 1.1rem;
+            font-family: inherit;
             outline: none;
-            transition: border-color 0.2s;
+            background-color: transparent;
+            color: var(--text-primary);
+            transition: background-color var(--transition);
             min-width: 250px;
+            letter-spacing: -0.01em;
+        }
+
+        input[type="url"]::placeholder {
+            color: var(--text-tertiary);
+            font-weight: 400;
         }
 
         input[type="url"]:focus {
-            border-color: var(--primary);
+            background-color: transparent;
+            box-shadow: none;
         }
 
         button {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 0.875rem 2rem;
-            border-radius: 0.5rem;
-            font-size: 1rem;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
+            transition: all var(--transition);
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            font-family: 'Sarabun', sans-serif;
+            font-family: inherit;
+            letter-spacing: -0.01em;
         }
 
         button:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-1px);
+            background-color: var(--primary-hover);
+            transform: scale(1.02);
+        }
+
+        button:active {
+            transform: scale(0.98);
         }
 
         button:disabled {
-            opacity: 0.7;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none;
         }
 
-        /* Results Section */
+        /* ===== Results ===== */
         #results-area {
             display: none;
-            animation: fadeIn 0.5s ease-out;
+            animation: fadeIn 0.6s ease-out;
         }
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 300px 1fr;
+            grid-template-columns: 280px 1fr;
             gap: 2rem;
             align-items: start;
         }
@@ -139,14 +184,23 @@
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            body {
+                padding: 1.5rem 1rem;
+            }
         }
 
-        /* Gauge Card */
+        /* ===== Score Card ===== */
         .card {
             background: var(--card-bg);
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            padding: 2.5rem 2rem;
+            border: none;
         }
 
         .gauge-container {
@@ -164,7 +218,7 @@
             width: 200px;
             height: 100px;
             border-radius: 200px 200px 0 0;
-            background: #e2e8f0;
+            background: var(--bg);
             overflow: hidden;
             margin-bottom: 1rem;
         }
@@ -193,56 +247,61 @@
         }
 
         .score-display {
-            font-size: 3rem;
+            font-size: 3.2rem;
             font-weight: 800;
-            color: var(--text-main);
+            color: var(--text-primary);
             margin-top: -3rem;
             position: relative;
             z-index: 2;
+            letter-spacing: -0.04em;
         }
 
         .score-label {
-            color: var(--text-muted);
+            color: var(--text-tertiary);
             font-weight: 500;
             margin-top: 0.5rem;
+            font-size: 0.95rem;
+            letter-spacing: -0.01em;
         }
 
-        /* Accordion List */
+        /* ===== Accordion ===== */
         .accordion {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .accordion-item {
             background: var(--card-bg);
-            border-radius: 0.75rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: none;
             overflow: hidden;
-            transition: box-shadow 0.2s;
+            transition: box-shadow var(--transition), transform var(--transition);
         }
 
         .accordion-item:hover {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
         }
 
         .accordion-header {
-            padding: 1rem 1.25rem;
+            padding: 1.25rem 1.5rem;
             display: flex;
             align-items: center;
             cursor: pointer;
             background: var(--card-bg);
             user-select: none;
+            transition: background-color var(--transition);
         }
 
         .accordion-header:hover {
-            background-color: #f8fafc;
+            background-color: rgba(0, 0, 0, 0.015);
         }
 
         .status-icon {
-            width: 1.5rem;
-            height: 1.5rem;
+            width: 1.75rem;
+            height: 1.75rem;
             margin-right: 1rem;
             flex-shrink: 0;
             display: flex;
@@ -253,34 +312,36 @@
 
         .status-pass {
             color: var(--success);
-            background: #dcfce7;
+            background: var(--success-bg);
         }
 
         .status-fail {
             color: var(--danger);
-            background: #fee2e2;
+            background: var(--danger-bg);
         }
 
         .acc-title {
             flex: 1;
             font-weight: 600;
-            font-size: 1rem;
-            color: var(--text-main);
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
         }
 
         .acc-score {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            color: var(--text-muted);
+            color: var(--text-tertiary);
             margin-right: 1rem;
-            padding: 0.25rem 0.5rem;
-            background: #f1f5f9;
-            border-radius: 0.5rem;
+            padding: 0.3rem 0.75rem;
+            background: var(--bg);
+            border-radius: var(--radius-pill);
+            letter-spacing: -0.01em;
         }
 
         .chevron {
-            transition: transform 0.3s ease;
-            color: var(--text-muted);
+            transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            color: var(--text-tertiary);
         }
 
         .accordion-item.active .chevron {
@@ -290,123 +351,209 @@
         .accordion-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out, padding 0.3s ease;
-            background-color: #fcfcfc;
+            transition: max-height 0.4s ease-out, padding 0.4s ease;
+            background-color: var(--card-bg);
             border-top: 1px solid transparent;
         }
 
         .accordion-item.active .accordion-content {
             max-height: 1000px;
-            /* Expand limit */
-            padding: 1.25rem;
+            padding: 1.5rem;
             border-top-color: var(--border);
             overflow-y: auto;
         }
 
         .data-label {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .advice-box {
-            background-color: var(--advice-bg);
-            color: var(--advice-text);
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-top: 1rem;
-            font-size: 0.95rem;
-            border-left: 4px solid #f59e0b;
+            background-color: var(--warning-bg);
+            color: #8a6d3b;
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            margin-top: 0;
+            font-size: 0.9rem;
+            border-left: none;
+            line-height: 1.7;
         }
 
         .advice-warning {
-            background-color: #fff7ed;
+            background-color: rgba(255, 149, 0, 0.06);
             color: #9a3412;
-            border-left-color: #f97316;
         }
 
         .raw-data-box {
             background: var(--code-bg);
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.875rem;
-            color: #334155;
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-sm);
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
             white-space: pre-wrap;
             word-break: break-all;
+            line-height: 1.7;
         }
 
         .tag-h1 {
-            color: #f59e0b;
+            color: var(--warning);
             font-weight: 700;
         }
 
         .tag-h2 {
-            color: #2563eb;
+            color: var(--primary);
             font-weight: 600;
             margin-left: 1rem;
         }
 
         .tag-h3 {
-            color: #64748b;
+            color: var(--text-tertiary);
             margin-left: 2rem;
         }
 
         .copy-btn {
-            background: white;
-            border: 1px solid var(--border);
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
+            background: var(--bg);
+            border: none;
+            padding: 0.35rem 0.75rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.7rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 0.25rem;
-            color: var(--text-muted);
-            font-family: 'Sarabun', sans-serif;
+            color: var(--text-tertiary);
+            font-family: inherit;
+            font-weight: 500;
+            transition: all var(--transition);
         }
 
         .copy-btn:hover {
             color: var(--primary);
-            border-color: var(--primary);
+            background: var(--primary-light);
         }
 
-        /* Loading Spinner */
+        /* ===== Loading / Skeleton ===== */
         .loader-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(4px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
+            display: none;
         }
 
-        .loader-overlay.active {
-            opacity: 1;
-            pointer-events: all;
+        .skeleton-container {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
         }
 
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #e2e8f0;
+        .skeleton-container.active {
+            display: block;
+        }
+
+        .skeleton-status {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .skeleton-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(0, 0, 0, 0.06);
             border-top-color: var(--primary);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        .skeleton-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .skeleton-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .skeleton-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .skeleton-line {
+            height: 14px;
+            background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ececec 75%);
+            background-size: 200% 100%;
+            animation: shimmerSkeleton 1.5s ease-in-out infinite;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .skeleton-line.w-60 {
+            width: 60%;
+        }
+
+        .skeleton-line.w-80 {
+            width: 80%;
+        }
+
+        .skeleton-line.w-40 {
+            width: 40%;
+        }
+
+        .skeleton-line.w-100 {
+            width: 100%;
+        }
+
+        .skeleton-line.thick {
+            height: 48px;
+            border-radius: var(--radius-md);
+        }
+
+        .skeleton-line.circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+        }
+
+        .skeleton-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .skeleton-item {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @keyframes shimmerSkeleton {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
         }
 
         @keyframes spin {
@@ -418,7 +565,7 @@
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(12px);
             }
 
             to {
@@ -428,287 +575,570 @@
         }
 
         .error-message {
-            background-color: #fee2e2;
-            color: #b91c1c;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid #fecaca;
+            background-color: var(--danger-bg);
+            color: #c62828;
+            padding: 1.25rem 1.5rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+            border: none;
             display: none;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
-        /* Schema Badges */
+        /* ===== Schema Badges ===== */
         .schema-badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
+            padding: 0.3rem 0.85rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.7rem;
             font-weight: 600;
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
+            margin-right: 0.4rem;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.01em;
         }
 
         .badge-aeo {
-            background-color: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
+            background-color: var(--success-bg);
+            color: #15803d;
+            border: none;
         }
 
-        /* Tier 1 */
         .badge-rich {
-            background-color: #dbeafe;
+            background-color: var(--primary-light);
             color: #1e40af;
-            border: 1px solid #bfdbfe;
+            border: none;
         }
 
-        /* Tier 2 */
         .badge-basic {
-            background-color: #f1f5f9;
-            color: #475569;
-            border: 1px solid #e2e8f0;
+            background-color: var(--bg);
+            color: var(--text-secondary);
+            border: none;
         }
 
-        /* Tier 3 */
         .badge-unknown {
-            background-color: #f3f4f6;
-            color: #6b7280;
+            background-color: var(--bg);
+            color: var(--text-tertiary);
         }
 
         .schema-code-toggle {
             background: none;
             border: none;
             color: var(--primary);
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             cursor: pointer;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: background 0.2s;
+            transition: opacity var(--transition);
+            font-family: inherit;
+            font-weight: 500;
+            padding: 0;
         }
 
-        /* Developer Fix Box (Terminal Check) */
+        .schema-code-toggle:hover {
+            opacity: 0.7;
+        }
+
+        .schema-code-container {
+            display: none;
+            margin-top: 0.75rem;
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .schema-code-container.show {
+            display: block;
+        }
+
+        /* ===== Dev Fix Box ===== */
         .dev-fix-box {
-            margin-top: 1rem;
-            background-color: #111827;
-            /* Gray-900 */
-            border-radius: 0.5rem;
+            margin-top: 1.25rem;
+            background-color: #1a1a1a;
+            border-radius: var(--radius-md);
             overflow: hidden;
-            border: 1px solid #374151;
-            /* Gray-700 */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: none;
+            box-shadow: var(--shadow-md);
         }
 
         .dev-fix-header {
-            background-color: #1f2937;
-            /* Gray-800 */
-            padding: 0.5rem 1rem;
+            background-color: #222;
+            padding: 0.75rem 1.25rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #374151;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .dev-fix-title {
             color: #fbbf24;
-            /* Amber */
             font-size: 0.75rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-family: 'Sarabun', sans-serif;
+            font-family: inherit;
         }
 
         .dev-fix-copy-btn {
-            background-color: #2563eb;
+            background-color: var(--primary);
             color: white;
             border: none;
-            border-radius: 0.25rem;
-            padding: 0.25rem 0.75rem;
-            font-size: 0.75rem;
+            border-radius: var(--radius-pill);
+            padding: 0.35rem 1rem;
+            font-size: 0.7rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all var(--transition);
             font-weight: 600;
         }
 
         .dev-fix-copy-btn:hover {
-            background-color: #1d4ed8;
+            background-color: var(--primary-hover);
+            transform: scale(1.02);
         }
 
         .dev-fix-copy-btn.copied {
-            background-color: #10b981;
+            background-color: var(--success);
+        }
 
-            .dev-fix-content {
-                padding: 1rem;
-                color: #4ade80;
-                /* Terminal Green */
-                font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            }
+        .dev-fix-content {
+            padding: 1.25rem;
+            color: #4ade80;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.8rem;
+            white-space: pre-wrap;
+            line-height: 1.7;
+        }
 
-            .dev-fix-content {
-                padding: 1rem;
-                color: #4ade80;
-                /* Terminal Green */
-                font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-                font-size: 0.85rem;
-                white-space: pre-wrap;
-                line-height: 1.6;
-            }
+        /* ===== Tech Grid ===== */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
 
-            /* Technical Health Grid */
+        @media (min-width: 640px) {
             .tech-grid {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 1rem;
-                margin-top: 1rem;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .tech-item {
+            background-color: var(--bg);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .tech-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .tech-info {
+            flex: 1;
+        }
+
+        .tech-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            margin-bottom: 0.1rem;
+            letter-spacing: -0.01em;
+        }
+
+        .tech-desc {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            line-height: 1.3;
+        }
+
+        /* ===== Utility Classes ===== */
+        .grid {
+            display: grid;
+        }
+
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        @media (min-width: 768px) {
+            .md\:grid-cols-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        .gap-3 {
+            gap: 0.75rem;
+        }
+
+        .mt-4 {
+            margin-top: 1rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-row {
+            flex-direction: row;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .p-3 {
+            padding: 0.75rem;
+        }
+
+        .bg-gray-50 {
+            background-color: var(--bg);
+        }
+
+        .border {
+            border-width: 1px;
+        }
+
+        .border-gray-200 {
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        .rounded-lg {
+            border-radius: var(--radius-sm);
+        }
+
+        .shadow-sm {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .flex-shrink-0 {
+            flex-shrink: 0;
+        }
+
+        .mr-3 {
+            margin-right: 0.75rem;
+        }
+
+        .text-2xl {
+            font-size: 1.5rem;
+            line-height: 2rem;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+
+        .text-gray-700 {
+            color: var(--text-primary);
+        }
+
+        .uppercase {
+            text-transform: uppercase;
+        }
+
+        .text-xs {
+            font-size: 0.75rem;
+            line-height: 1rem;
+        }
+
+        .text-gray-500 {
+            color: var(--text-tertiary);
+        }
+
+        /* ===== AEO AI Prompt Section ===== */
+        .aeo-prompt-section {
+            margin-top: 3rem;
+            display: none;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .aeo-prompt-card {
+            background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .aeo-prompt-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #667eea);
+            background-size: 200% 100%;
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
             }
 
-            @media (min-width: 640px) {
-                .tech-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                }
+            100% {
+                background-position: -200% 0;
             }
+        }
 
-            .tech-item {
-                background-color: #f8fafc;
-                border: 1px solid #e2e8f0;
-                border-radius: 0.5rem;
-                padding: 1rem;
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-            }
+        .aeo-prompt-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
 
-            .tech-icon {
-                font-size: 1.5rem;
-                flex-shrink: 0;
-            }
+        .aeo-prompt-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            backdrop-filter: blur(8px);
+        }
 
-            .tech-info {
-                flex: 1;
-            }
+        .aeo-prompt-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #f0f0f5;
+            letter-spacing: -0.03em;
+        }
 
-            .tech-title {
-                font-weight: 700;
-                color: #334155;
-                font-size: 0.95rem;
-                margin-bottom: 0.1rem;
-            }
+        .aeo-prompt-subtitle {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.88rem;
+            margin-bottom: 1.75rem;
+            line-height: 1.6;
+        }
 
-            .tech-desc {
-                font-size: 0.8rem;
-                color: #64748b;
-                line-height: 1.3;
-            }
+        .aeo-prompt-body {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            max-height: 320px;
+            overflow-y: auto;
+        }
 
-            /* Hardcoded Utilities for Tech Grid */
-            .grid {
-                display: grid;
-            }
+        .aeo-prompt-body::-webkit-scrollbar {
+            width: 4px;
+        }
 
-            .grid-cols-1 {
-                grid-template-columns: repeat(1, minmax(0, 1fr));
-            }
+        .aeo-prompt-body::-webkit-scrollbar-track {
+            background: transparent;
+        }
 
-            @media (min-width: 768px) {
-                .md\:grid-cols-2 {
-                    grid-template-columns: repeat(2, minmax(0, 1fr));
-                }
-            }
+        .aeo-prompt-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+        }
 
-            .gap-3 {
-                gap: 0.75rem;
-            }
+        .aeo-prompt-text {
+            color: rgba(165, 243, 252, 0.9);
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 0.78rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.75;
+        }
 
-            .mt-4 {
-                margin-top: 1rem;
-            }
+        .aeo-prompt-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
 
-            .flex {
-                display: flex;
-            }
+        .aeo-copy-btn {
+            flex: 1;
+            min-width: 180px;
+            padding: 0.9rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-pill);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all var(--transition);
+            font-family: inherit;
+            letter-spacing: -0.01em;
+        }
 
-            .flex-row {
-                flex-direction: row;
-            }
+        .aeo-copy-btn.primary {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a2e;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+        }
 
-            .flex-col {
-                flex-direction: column;
-            }
+        .aeo-copy-btn.primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
 
-            .items-center {
-                align-items: center;
-            }
+        .aeo-copy-btn.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+        }
 
-            .p-3 {
-                padding: 0.75rem;
-            }
+        .aeo-copy-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: scale(1.02);
+        }
 
-            .bg-gray-50 {
-                background-color: #f9fafb;
-            }
+        .aeo-copy-btn.copied {
+            background: var(--success) !important;
+            color: white !important;
+            border-color: transparent !important;
+        }
 
-            .border {
-                border-width: 1px;
-            }
+        .aeo-info-chips {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
 
-            .border-gray-200 {
-                border-color: #e5e7eb;
-            }
+        .aeo-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.4rem 0.85rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            backdrop-filter: blur(8px);
+        }
 
-            .rounded-lg {
-                border-radius: 0.5rem;
-            }
+        .aeo-chip.purple {
+            background: rgba(139, 92, 246, 0.12);
+            color: rgba(196, 181, 253, 0.9);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+        }
 
-            .shadow-sm {
-                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            }
+        .aeo-chip.blue {
+            background: rgba(59, 130, 246, 0.12);
+            color: rgba(147, 197, 253, 0.9);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+        }
 
-            .flex-shrink-0 {
-                flex-shrink: 0;
-            }
+        .aeo-chip.green {
+            background: rgba(16, 185, 129, 0.12);
+            color: rgba(110, 231, 183, 0.9);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
 
-            .mr-3 {
-                margin-right: 0.75rem;
-            }
+        /* ===== Toast Notification ===== */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--text-primary);
+            color: white;
+            padding: 0.85rem 1.5rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: inherit;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-            .text-2xl {
-                font-size: 1.5rem;
-                line-height: 2rem;
-            }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
 
-            .font-bold {
-                font-weight: 700;
-            }
+        /* ===== Developer View Toggle ===== */
+        .dev-view-toggle {
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.5rem 0;
+            margin-top: 0.75rem;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: color var(--transition);
+        }
 
-            .text-sm {
-                font-size: 0.875rem;
-                line-height: 1.25rem;
-            }
+        .dev-view-toggle:hover {
+            color: var(--primary);
+        }
 
-            .text-gray-700 {
-                color: #374151;
-            }
+        .dev-view-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, margin 0.4s ease;
+            margin-top: 0;
+        }
 
-            .uppercase {
-                text-transform: uppercase;
-            }
+        .dev-view-content.open {
+            max-height: 2000px;
+            margin-top: 0.75rem;
+        }
 
-            .text-xs {
-                font-size: 0.75rem;
-                line-height: 1rem;
+        /* ===== Button Spin Animation ===== */
+        @keyframes btnSpin {
+            to {
+                transform: rotate(360deg);
             }
+        }
 
-            .text-gray-500 {
-                color: #6b7280;
-            }
+        .btn-spinner {
+            animation: btnSpin 1s linear infinite;
+            display: inline-block;
+        }
     </style>
 </head>
 
 <body>
 
-    <div class="loader-overlay" id="loader">
-        <div class="spinner"></div>
-    </div>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
 
     <div class="container">
         <header>
@@ -717,15 +1147,47 @@
         </header>
 
         <div class="input-group">
-            <input type="url" id="urlInput" placeholder="https://example.com" required>
+            <input type="url" id="urlInput" placeholder="วาง URL เว็บไซต์ที่นี่ เช่น https://example.com" required>
             <button id="analyzeBtn" onclick="analyzeSite()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg id="btnIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                วิเคราะห์เว็บไซต์
+                <span id="btnText">เริ่มวิเคราะห์เลย</span>
             </button>
+        </div>
+
+        <!-- Skeleton Loading -->
+        <div class="skeleton-container" id="skeleton">
+            <div class="skeleton-status">
+                <div class="skeleton-spinner"></div>
+                <div class="skeleton-text" id="skeleton-status">กำลังดึงข้อมูลเว็บไซต์...</div>
+            </div>
+            <div class="skeleton-grid">
+                <div class="skeleton-card">
+                    <div class="skeleton-line circle"></div>
+                    <div class="skeleton-line w-60" style="margin: 0 auto;"></div>
+                </div>
+                <div class="skeleton-items">
+                    <div class="skeleton-item">
+                        <div class="skeleton-line w-80"></div>
+                        <div class="skeleton-line w-40"></div>
+                    </div>
+                    <div class="skeleton-item">
+                        <div class="skeleton-line w-60"></div>
+                        <div class="skeleton-line w-80"></div>
+                    </div>
+                    <div class="skeleton-item">
+                        <div class="skeleton-line w-100"></div>
+                        <div class="skeleton-line w-40"></div>
+                    </div>
+                    <div class="skeleton-item">
+                        <div class="skeleton-line w-80"></div>
+                        <div class="skeleton-line w-60"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="errorMsg" class="error-message"></div>
@@ -751,6 +1213,46 @@
 
             </div>
         </div>
+
+        <!-- AEO AI Prompt Section -->
+        <div class="aeo-prompt-section" id="aeo-prompt-section">
+            <div class="aeo-prompt-card">
+                <div class="aeo-prompt-header">
+                    <div class="aeo-prompt-icon">🤖</div>
+                    <div>
+                        <div class="aeo-prompt-title">AEO Deep Analysis by AI</div>
+                    </div>
+                </div>
+                <div class="aeo-prompt-subtitle">
+                    คัดลอก Prompt ด้านล่างไปวางใน ChatGPT / Gemini / Claude เพื่อให้ AI
+                    วิเคราะห์เชิงลึกว่าเว็บของคุณพร้อมสำหรับ Answer Engine หรือยัง
+                </div>
+
+                <div class="aeo-info-chips">
+                    <span class="aeo-chip purple">🧠 AI's Understanding</span>
+                    <span class="aeo-chip blue">🔍 Missing Context</span>
+                    <span class="aeo-chip green">💡 AEO Opportunities</span>
+                </div>
+
+                <div class="aeo-prompt-body">
+                    <div class="aeo-prompt-text" id="aeo-prompt-text"></div>
+                </div>
+
+                <div class="aeo-prompt-actions">
+                    <button class="aeo-copy-btn primary" id="aeo-copy-main" onclick="copyAeoPrompt(this)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        คัดลอก Prompt ทั้งหมด
+                    </button>
+                    <button class="aeo-copy-btn secondary" onclick="openAeoInChatGPT()">
+                        💬 เปิดใน ChatGPT
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -767,12 +1269,13 @@
             let lastError = null;
             const btn = document.getElementById('analyzeBtn');
 
+            const btnText = document.getElementById('btnText');
             for (let i = 0; i < PROXIES.length; i++) {
                 const proxy = PROXIES[i];
                 try {
                     // Update UI if retrying (not the first one)
-                    if (i > 0) {
-                        btn.innerHTML = `กำลังพยายามเชื่อมต่อผ่านช่องทางสำรองที่ ${i}...`;
+                    if (i > 0 && btnText) {
+                        btnText.textContent = `เชื่อมต่อช่องทางสำรองที่ ${i}...`;
                     }
 
                     console.log(`Trying proxy: ${proxy}`);
@@ -787,7 +1290,7 @@
                     console.warn(`Proxy failed: ${proxy}`, err);
                     lastError = err;
                     // Provide immediate feedback before next loop
-                    btn.innerHTML = `การเชื่อมต่อล้มเหลว... กำลังเปลี่ยนเส้นทาง...`;
+                    if (btnText) btnText.textContent = `เปลี่ยนเส้นทาง...`;
                 }
             }
             throw new Error('ขออภัย! เว็บไซต์ปลายทางมีระบบความปลอดภัยสูง (Firewall) ทำให้เครื่องมือฟรีไม่สามารถเข้าถึงได้ กรุณาลองกับเว็บไซต์อื่น หรือลองใหม่ในภายหลัง');
@@ -814,6 +1317,9 @@
                 const results = performAnalysis(doc, url); // Pass url to performAnalysis
                 renderResults(results);
                 document.getElementById('results-area').style.display = 'block';
+
+                // Build and display AEO Deep Analysis Prompt
+                buildAeoPrompt(doc);
 
             } catch (err) {
                 showError(err.message);
@@ -1373,9 +1879,9 @@ Write a valid JSON-LD "FAQPage" Schema markup for this page.
             const degrees = (results.score / 100) * 180 - 180;
             gaugeFill.style.transform = `rotate(${degrees}deg)`;
 
-            let color = '#ef4444'; let text = "ต้องปรับปรุง";
-            if (results.score >= 50) { color = '#f59e0b'; text = "พอใช้"; }
-            if (results.score >= 80) { color = '#10b981'; text = "ดีเยี่ยม"; }
+            let color = '#f87171'; let text = "ต้องปรับปรุง";
+            if (results.score >= 50) { color = '#fbbf24'; text = "พอใช้"; }
+            if (results.score >= 80) { color = '#34d399'; text = "ดีเยี่ยม"; }
 
             gaugeFill.style.background = color;
             scoreValue.style.color = color;
@@ -1403,15 +1909,21 @@ Write a valid JSON-LD "FAQPage" Schema markup for this page.
                         <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
                     <div class="accordion-content">
-                        <div class="data-label">
-                            <span>${item.dataLabel}</span>
-                            ${item.hideCopy ? '' : `<button class="copy-btn" onclick="event.stopPropagation(); copyData('${item.id}')">คัดลอก</button>`}
-                        </div>
-                        <div class="raw-data-box" id="raw-${item.id}">${item.dataContent}</div>
-                        
                         <div class="advice-box ${item.adviceClass || ''}">
                             <strong>คำแนะนำ:</strong> <br>
                             ${item.advice}
+                        </div>
+
+                        <button class="dev-view-toggle" onclick="event.stopPropagation(); toggleDevView(this)">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            ดูข้อมูลเชิงลึกสำหรับนักพัฒนา (Developer View)
+                        </button>
+                        <div class="dev-view-content">
+                            <div class="data-label">
+                                <span>${item.dataLabel}</span>
+                                ${item.hideCopy ? '' : `<button class="copy-btn" onclick="event.stopPropagation(); copyData('${item.id}', this)">คัดลอก</button>`}
+                            </div>
+                            <div class="raw-data-box" id="raw-${item.id}">${item.dataContent}</div>
                         </div>
 
                         <textarea style="display:none;" id="copy-${item.id}">${item.copyText}</textarea>
@@ -1432,27 +1944,81 @@ Write a valid JSON-LD "FAQPage" Schema markup for this page.
             }
         }
 
-        function copyData(id) {
+        function copyData(id, btn) {
             const text = document.getElementById(`copy-${id}`).value;
-            navigator.clipboard.writeText(text).then(() => {
-                alert("คัดลอกข้อมูลเรียบร้อย!");
-            });
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('✅ คัดลอกข้อมูลเรียบร้อย!');
+                    if (btn) {
+                        const orig = btn.innerHTML;
+                        btn.innerHTML = '✅ แล้ว!';
+                        setTimeout(() => btn.innerHTML = orig, 2000);
+                    }
+                });
+            }
         }
 
-        function setLoading(isLoading) {
-            const loader = document.getElementById('loader');
-            const btn = document.getElementById('analyzeBtn');
-            if (isLoading) {
-                loader.classList.add('active');
-                btn.disabled = true;
-                btn.innerHTML = 'กำลังวิเคราะห์...';
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerHTML = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        function toggleDevView(btn) {
+            const content = btn.nextElementSibling;
+            const isOpen = content.classList.contains('open');
+            content.classList.toggle('open');
+            if (isOpen) {
+                btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> ดูข้อมูลเชิงลึกสำหรับนักพัฒนา (Developer View)`;
             } else {
-                loader.classList.remove('active');
+                btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> ซ่อนข้อมูลเชิงลึก`;
+            }
+        }
+
+        // Rotating status messages for skeleton loader
+        const LOADING_MESSAGES = [
+            'กำลังดึงข้อมูลเว็บไซต์...',
+            'กำลังวิเคราะห์โครงสร้าง AEO...',
+            'กำลังตรวจสอบ Schema Markup...',
+            'กำลังตรวจสอบ Meta Tags & Headings...',
+            'กำลังให้คะแนน...'
+        ];
+        let _loadingMsgInterval = null;
+
+        function setLoading(isLoading) {
+            const skeleton = document.getElementById('skeleton');
+            const btn = document.getElementById('analyzeBtn');
+            const btnIcon = document.getElementById('btnIcon');
+            const btnText = document.getElementById('btnText');
+
+            if (isLoading) {
+                skeleton.classList.add('active');
+                btn.disabled = true;
+                btnIcon.classList.add('btn-spinner');
+                btnText.textContent = 'กำลังวิเคราะห์...';
+
+                // Rotate status messages
+                let msgIdx = 0;
+                const statusEl = document.getElementById('skeleton-status');
+                statusEl.textContent = LOADING_MESSAGES[0];
+                _loadingMsgInterval = setInterval(() => {
+                    msgIdx = (msgIdx + 1) % LOADING_MESSAGES.length;
+                    statusEl.style.opacity = '0';
+                    setTimeout(() => {
+                        statusEl.textContent = LOADING_MESSAGES[msgIdx];
+                        statusEl.style.opacity = '1';
+                    }, 200);
+                }, 2000);
+            } else {
+                skeleton.classList.remove('active');
                 btn.disabled = false;
-                btn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    วิเคราะห์เว็บไซต์
-                `;
+                btnIcon.classList.remove('btn-spinner');
+                btnText.textContent = 'เริ่มวิเคราะห์เลย';
+                if (_loadingMsgInterval) {
+                    clearInterval(_loadingMsgInterval);
+                    _loadingMsgInterval = null;
+                }
             }
         }
 
@@ -1513,7 +2079,7 @@ Write a valid JSON-LD "FAQPage" Schema markup for this page.
                 if (successful) showCopyFeedback(btn);
             } catch (err) {
                 console.error('Fallback copy failed', err);
-                alert('Copy failed. Please select text and copy manually.');
+                showToast('❌ คัดลอกไม่สำเร็จ กรุณาเลือกข้อความและคัดลอกด้วยตนเอง');
             }
 
             document.body.removeChild(textArea);
@@ -1530,11 +2096,127 @@ Write a valid JSON-LD "FAQPage" Schema markup for this page.
             }, 2000);
         }
 
-        function copyToClipboard(text) {
-            // Keep old function just in case, or alias it
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Prompt Copied to Clipboard!");
-            });
+        // copyToClipboard removed — replaced by showToast-based copy flow
+
+        // === AEO Deep Analysis Prompt Builder ===
+        let _aeoPromptFull = '';
+
+        function buildAeoPrompt(doc) {
+            // Extract readable text from body
+            const bodyEl = doc.body;
+            if (!bodyEl) {
+                document.getElementById('aeo-prompt-section').style.display = 'none';
+                return;
+            }
+
+            // Remove scripts and styles from cloned body to get clean text
+            const clone = bodyEl.cloneNode(true);
+            clone.querySelectorAll('script, style, noscript, iframe').forEach(el => el.remove());
+            let rawText = clone.innerText || clone.textContent || '';
+
+            // Clean up: collapse whitespace, trim
+            rawText = rawText.replace(/\n{3,}/g, '\n\n').replace(/[ \t]+/g, ' ').trim();
+
+            // Truncate to ~4000 chars to keep prompt reasonable
+            const maxChars = 4000;
+            if (rawText.length > maxChars) {
+                rawText = rawText.substring(0, maxChars) + '\n\n[...เนื้อหาถูกตัดทอนเพื่อความเหมาะสม...]';
+            }
+
+            // Build the master prompt
+            _aeoPromptFull = `## SYSTEM ROLE & EXPERTISE
+
+คุณคือคณะผู้เชี่ยวชาญระดับสูงที่ทำงานร่วมกัน ประกอบด้วย:
+- 🎯 Senior AEO Strategist — ผู้เชี่ยวชาญด้าน Answer Engine Optimization ที่เข้าใจวิธีที่ AI (ChatGPT, Gemini, Perplexity, Bing Copilot) ดึงข้อมูลจากเว็บไซต์ไปตอบผู้ใช้
+- 📊 SEO Content Analyst — นักวิเคราะห์เนื้อหาเชิงลึกที่เชี่ยวชาญ E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) และ Search Intent
+- 🏗️ Information Architect — ผู้เชี่ยวชาญโครงสร้างข้อมูลที่เข้าใจว่า AI ต้องการ structured content อย่างไรเพื่อ extract คำตอบได้แม่นยำ
+
+## ANALYSIS RULES (กฎการวิเคราะห์)
+
+⚠️ กฎสำคัญที่ต้องปฏิบัติตามอย่างเคร่งครัด:
+1. **ห้าม Bias** — วิเคราะห์ตามข้อเท็จจริงที่ปรากฏในเนื้อหาเท่านั้น ห้ามเดาหรือสมมติข้อมูลที่ไม่มีอยู่จริง
+2. **ห้ามชื่นชมเกินจริง** — ชี้จุดแข็งได้ แต่ต้องชี้จุดอ่อนด้วยอย่างตรงไปตรงมา
+3. **อ้างอิงได้** — ทุกข้อสังเกตต้องอ้างอิงจากเนื้อหาที่เห็นจริง ห้ามแต่งเติม
+4. **Actionable** — คำแนะนำทุกข้อต้องนำไปปฏิบัติได้ทันที ไม่ใช่คำแนะนำลอยๆ
+5. **มุมมอง AI** — วิเคราะห์จากมุมมองที่ว่า "ถ้า AI อ่านเว็บนี้ AI จะเข้าใจอะไรได้บ้าง" ไม่ใช่มุมมองของมนุษย์
+
+## TARGET DATA (ข้อมูลเว็บไซต์ที่ต้องวิเคราะห์)
+
+\`\`\`
+${rawText}
+\`\`\`
+
+## TASKS (คำสั่งวิเคราะห์)
+
+จากข้อมูลเว็บไซต์ด้านบน จงวิเคราะห์และตอบทั้ง 3 หัวข้อต่อไปนี้:
+
+### 1. 🧠 AI's Understanding (AI เข้าใจเว็บนี้ว่าอย่างไร)
+สมมติว่าผู้ใช้ถาม AI ว่า "เว็บนี้คืออะไร ขายอะไร ให้บริการอะไร?"
+- จงสรุปคำตอบที่ AI จะตอบได้จากข้อมูลที่เห็น (ไม่เกิน 3 บรรทัด)
+- ระบุ **ระดับความมั่นใจ** ของ AI: สูง / ปานกลาง / ต่ำ พร้อมเหตุผลสั้นๆ
+- ถ้าเนื้อหาไม่ชัดเจนพอ ให้บอกตรงๆ ว่า "AI ไม่สามารถระบุได้ชัดเจนเพราะ..."
+
+### 2. 🔍 Missing Context (จุดบอดที่ AI มองไม่เห็น)
+ตรวจสอบเนื้อหาอย่างละเอียดในมิติต่อไปนี้:
+- **ข้อมูลที่ขาดหาย**: สิ่งที่ผู้ใช้คาดหวังจะเห็นแต่ไม่มี (เช่น ราคา, ที่อยู่, วิธีติดต่อ, นโยบายคืนสินค้า)
+- **ข้อมูลที่คลุมเครือ**: ประโยคที่ AI อาจตีความได้หลายแบบ หรือ ใช้ภาษากำกวม
+- **ข้อมูลที่อาจทำให้ AI ตอบผิด**: เนื้อหาที่ขัดแย้งกันเอง หรือ ล้าสมัย
+- ระบุแต่ละจุดพร้อม **ยกตัวอย่างข้อความจริง** จากเว็บ (ถ้ามี)
+
+### 3. 💡 AEO Opportunities (โอกาสติด Answer Engine)
+แนะนำคำถามแบบ Direct Answer (FAQ) **3 ข้อ** ที่เว็บนี้ควรเพิ่ม:
+- คำถามต้องเป็นภาษาธรรมชาติที่คนจะพิมพ์ถาม AI จริงๆ (Natural Language Query)
+- คำถามต้องเกี่ยวข้องกับ **ธุรกิจ/บริการ** ของเว็บไซต์นี้โดยตรง
+- แนะนำ **ตัวอย่างคำตอบสั้นๆ** (40-60 คำ) ที่ออกแบบมาให้ AI ดึงไป Featured Snippet ได้
+- เรียงลำดับตาม **Search Volume ที่คาดว่าจะสูงสุด** ไปต่ำสุด
+
+## OUTPUT FORMAT
+
+ตอบเป็นภาษาไทย จัดรูปแบบให้ชัดเจนด้วย Markdown Headers ตามหัวข้อ 1-3 ด้านบน`;
+
+            // Display in UI
+            document.getElementById('aeo-prompt-text').textContent = _aeoPromptFull;
+            document.getElementById('aeo-prompt-section').style.display = 'block';
+        }
+
+        function copyAeoPrompt(btn) {
+            if (!_aeoPromptFull) return;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(_aeoPromptFull).then(() => {
+                    showAeoCopyFeedback(btn);
+                }).catch(() => {
+                    fallbackCopyText(_aeoPromptFull, btn);
+                });
+            } else {
+                fallbackCopyText(_aeoPromptFull, btn);
+            }
+        }
+
+        function showAeoCopyFeedback(btn) {
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '✅ คัดลอกแล้ว!';
+            btn.classList.add('copied');
+
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.classList.remove('copied');
+            }, 2500);
+        }
+
+        function openAeoInChatGPT() {
+            if (!_aeoPromptFull) return;
+
+            // Copy prompt first, then open ChatGPT
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(_aeoPromptFull).then(() => {
+                    window.open('https://chatgpt.com/', '_blank');
+                }).catch(() => {
+                    window.open('https://chatgpt.com/', '_blank');
+                });
+            } else {
+                window.open('https://chatgpt.com/', '_blank');
+            }
         }
     </script>
 </body>
